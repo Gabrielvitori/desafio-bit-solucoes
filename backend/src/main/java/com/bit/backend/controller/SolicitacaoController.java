@@ -2,6 +2,7 @@ package com.bit.backend.controller;
 
 import com.bit.backend.dto.SolicitacaoRequestDTO;
 import com.bit.backend.dto.SolicitacaoResponseDTO;
+import com.bit.backend.dto.StatusRequestDTO;
 import com.bit.backend.service.SolicitacaoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,15 @@ public class SolicitacaoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         solicitacaoService.excluir(id);
-        return ResponseEntity.noContent().build(); 
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<SolicitacaoResponseDTO> atualizarStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody StatusRequestDTO dto) {
+
+        SolicitacaoResponseDTO atualizada = solicitacaoService.atualizarStatus(id, dto);
+        return ResponseEntity.ok(atualizada);
     }
 }

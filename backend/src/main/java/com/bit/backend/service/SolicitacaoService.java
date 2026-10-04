@@ -2,6 +2,7 @@ package com.bit.backend.service;
 
 import com.bit.backend.dto.SolicitacaoRequestDTO;
 import com.bit.backend.dto.SolicitacaoResponseDTO;
+import com.bit.backend.dto.StatusRequestDTO;
 import com.bit.backend.model.Solicitacao;
 import com.bit.backend.model.Usuario;
 import com.bit.backend.model.enums.Status;
@@ -53,6 +54,16 @@ public class SolicitacaoService {
 
         solicitacao.setAtivo(false);
         solicitacaoRepository.save(solicitacao);
+    }
+
+    public SolicitacaoResponseDTO atualizarStatus(Long id, StatusRequestDTO dto) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Solicitação não encontrada com o ID: " + id));
+
+        solicitacao.setStatus(dto.getStatus());
+        Solicitacao salva = solicitacaoRepository.save(solicitacao);
+
+        return mapearParaDTO(salva);
     }
 
     private SolicitacaoResponseDTO mapearParaDTO(Solicitacao solicitacao) {
