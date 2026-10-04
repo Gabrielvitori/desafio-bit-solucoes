@@ -1,3 +1,11 @@
 spring:
-  application:
-    name: backend
+  datasource:
+    url: jdbc:mysql://localhost:3307/portal_solicitacoes
+    username: ${MYSQL_USER:bit_user}
+    password: ${MYSQL_PASSWORD:bit_pass_123}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
