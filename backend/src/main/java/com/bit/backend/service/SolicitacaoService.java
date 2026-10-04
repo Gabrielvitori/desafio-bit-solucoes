@@ -24,7 +24,7 @@ public class SolicitacaoService {
     }
 
     public List<SolicitacaoResponseDTO> listarTodas() {
-        return solicitacaoRepository.findAll()
+        return solicitacaoRepository.findAllByAtivoTrue()
                 .stream()
                 .map(this::mapearParaDTO)
                 .collect(Collectors.toList());
@@ -45,6 +45,14 @@ public class SolicitacaoService {
         Solicitacao salva = solicitacaoRepository.save(solicitacao);
 
         return mapearParaDTO(salva);
+    }
+
+    public void excluir(Long id) {
+        Solicitacao solicitacao = solicitacaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Solicitação não encontrada com o ID: " + id));
+
+        solicitacao.setAtivo(false);
+        solicitacaoRepository.save(solicitacao);
     }
 
     private SolicitacaoResponseDTO mapearParaDTO(Solicitacao solicitacao) {

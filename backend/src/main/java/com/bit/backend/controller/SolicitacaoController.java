@@ -33,4 +33,10 @@ public class SolicitacaoController {
         SolicitacaoResponseDTO novaSolicitacao = solicitacaoService.criarSolicitacao(dto, usuarioId);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaSolicitacao);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        solicitacaoService.excluir(id);
+        return ResponseEntity.noContent().build(); 
+    }
 }
