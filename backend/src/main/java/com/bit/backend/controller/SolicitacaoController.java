@@ -8,6 +8,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import com.bit.backend.model.enums.Categoria;
+import com.bit.backend.model.enums.Status;
+import java.time.LocalDateTime;
 
 import java.util.List;
 
@@ -22,8 +26,15 @@ public class SolicitacaoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SolicitacaoResponseDTO>> listarTodas() {
-        return ResponseEntity.ok(solicitacaoService.listarTodas());
+    public ResponseEntity<List<SolicitacaoResponseDTO>> listar(
+            @RequestParam(required = false) Status status,
+            @RequestParam(required = false) Categoria categoria,
+            @RequestParam(required = false) String titulo,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataFim) {
+
+        List<SolicitacaoResponseDTO> resultados = solicitacaoService.pesquisar(status, categoria, titulo, dataInicio, dataFim);
+        return ResponseEntity.ok(resultados);
     }
 
     @PostMapping

@@ -9,7 +9,14 @@ import com.bit.backend.model.enums.Role;
 import com.bit.backend.model.enums.Status;
 import com.bit.backend.repository.SolicitacaoRepository;
 import com.bit.backend.repository.UsuarioRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import com.bit.backend.model.enums.Categoria;
+import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,9 +32,42 @@ public class SolicitacaoService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<SolicitacaoResponseDTO> listarTodas() {
-        return solicitacaoRepository.findAllByAtivoTrue()
-                .stream()
+    @Transactional(readOnly = true)
+    public List<SolicitacaoResponseDTO> pesquisar(Status status, Categoria categoria, String titulo, LocalDateTime dataInicio, LocalDateTime dataFim) {
+        Usuario usuarioLogado = getUsuarioLogado();
+        Long usuarioIdFiltro = (usuarioLogado.getRole() == Role.ROLE_ADMIN) ? null : usuarioLogado.getId();
+
+        Specification<Solicitacao> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            predicates.add(cb.isTrue(root.get("ativo")));
+
+            if (usuarioIdFiltro != null) {
+                predicates.add(cb.equal(root.get("solicitante").get("id"), usuarioIdFiltro));
+            }
+
+            if (status != null) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+            if (categoria != null) {
+                predicates.add(cb.equal(root.get("categoria"), categoria));
+            }
+            if (titulo != null && !titulo.trim().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get("titulo")), "%" + titulo.toLowerCase() + "%"));
+            }
+            if (dataInicio != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("dataCriacao"), dataInicio));
+            }
+            if (dataFim != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("dataCriacao"), dataFim));
+            }
+
+            query.orderBy(cb.desc(root.get("dataCriacao")));
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return solicitacaoRepository.findAll(spec).stream()
                 .map(this::mapearParaDTO)
                 .collect(Collectors.toList());
     }
