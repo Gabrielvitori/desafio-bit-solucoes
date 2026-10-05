@@ -59,7 +59,7 @@ public class AutenticacaoController {
     public ResponseEntity<Void> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate(); 
+            session.invalidate();
         }
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok().build();

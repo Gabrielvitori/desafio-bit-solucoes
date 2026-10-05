@@ -5,6 +5,7 @@ import com.bit.backend.dto.SolicitacaoResponseDTO;
 import com.bit.backend.dto.StatusRequestDTO;
 import com.bit.backend.model.Solicitacao;
 import com.bit.backend.model.Usuario;
+import com.bit.backend.model.enums.Role;
 import com.bit.backend.model.enums.Status;
 import com.bit.backend.repository.SolicitacaoRepository;
 import com.bit.backend.repository.UsuarioRepository;
@@ -51,6 +52,17 @@ public class SolicitacaoService {
         Solicitacao solicitacao = solicitacaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Solicitação não encontrada com o ID: " + id));
 
+        Usuario usuarioLogado = getUsuarioLogado();
+
+        if (!solicitacao.getSolicitante().getId().equals(usuarioLogado.getId())
+                && usuarioLogado.getRole() != Role.ROLE_ADMIN) {
+            throw new RuntimeException("Você não tem permissão para excluir esta solicitação.");
+        }
+
+        if (solicitacao.getStatus() != Status.ABERTO) {
+            throw new RuntimeException("Apenas solicitações com status ABERTO podem ser excluídas.");
+        }
+
         solicitacao.setAtivo(false);
         solicitacaoRepository.save(solicitacao);
     }
@@ -59,10 +71,21 @@ public class SolicitacaoService {
         Solicitacao solicitacao = solicitacaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Solicitação não encontrada com o ID: " + id));
 
+        Usuario usuarioLogado = getUsuarioLogado();
+
+        if (usuarioLogado.getRole() != Role.ROLE_ADMIN) {
+            throw new RuntimeException("Apenas administradores podem alterar o status de uma solicitação.");
+        }
+
         solicitacao.setStatus(dto.getStatus());
         Solicitacao salva = solicitacaoRepository.save(solicitacao);
 
         return mapearParaDTO(salva);
+    }
+
+    private Usuario getUsuarioLogado() {
+        return (Usuario) org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal();
     }
 
     private SolicitacaoResponseDTO mapearParaDTO(Solicitacao solicitacao) {
