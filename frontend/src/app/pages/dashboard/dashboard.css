@@ -1,0 +1,28 @@
+.bg-brand {
+  background-color: #004a9f !important;
+}
+
+.text-brand {
+  color: #004a9f !important;
+}
+
+.btn-brand {
+  background-color: #004a9f;
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-brand:hover {
+  background-color: #003370;
+  color: white;
+}
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 .5rem 1rem rgba(0, 74, 159, 0.15) !important;
+}

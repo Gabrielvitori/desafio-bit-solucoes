@@ -1,0 +1,42 @@
+/* Fundo da tela */
+.login-container {
+  min-height: 100vh;
+  background-color: #f4f7f9;
+}
+
+/* O Card principal */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: #ffffff;
+  border: none;
+  border-top: 6px solid #004a9f;
+  border-radius: 12px;
+}
+
+/* Título */
+.brand-title {
+  color: #004a9f;
+  letter-spacing: 1px;
+}
+
+/* Bordas dos inputs */
+.input-blue:focus {
+  border-color: #004a9f;
+  box-shadow: 0 0 0 0.25rem rgba(0, 74, 159, 0.25);
+}
+
+/* Botão principal */
+.btn-brand {
+  background-color: #004a9f;
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-brand:hover {
+  background-color: #003370;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 74, 159, 0.3);
+}

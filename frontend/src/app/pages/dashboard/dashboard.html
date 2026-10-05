@@ -1,0 +1,82 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-brand shadow-sm">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-bold" href="#">BIT Soluções | Portal</a>
+    <div class="d-flex align-items-center">
+      <span class="text-white me-3">Logado como: <strong>{{ usuarioNome }}</strong></span>
+      <button class="btn btn-outline-light btn-sm" (click)="sair()">Sair</button>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5">
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="p-4 bg-white rounded shadow-sm border-start border-4 border-primary">
+        <h2 class="fw-bold text-brand">Bem-vindo ao Portal de Solicitações</h2>
+        <p class="text-muted mb-0">Acompanhe as demandas corporativas em tempo real.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Régua de Indicadores (Atendendo ao Requisito do PDF) -->
+  <div class="row text-center mb-5">
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card shadow-sm border-0 bg-light card-hover">
+        <div class="card-body py-4">
+          <h1 class="display-4 fw-bold text-brand">{{ resumo.total }}</h1>
+          <p class="text-muted mb-0 fw-semibold text-uppercase letter-spacing">Total</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card shadow-sm border-0 bg-light card-hover">
+        <div class="card-body py-4">
+          <h1 class="display-4 fw-bold text-warning">{{ resumo.abertas }}</h1>
+          <p class="text-muted mb-0 fw-semibold text-uppercase letter-spacing">Abertas</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card shadow-sm border-0 bg-light card-hover">
+        <div class="card-body py-4">
+          <h1 class="display-4 fw-bold text-info">{{ resumo.emAtendimento }}</h1>
+          <p class="text-muted mb-0 fw-semibold text-uppercase letter-spacing">Em Atendimento</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card shadow-sm border-0 bg-light card-hover">
+        <div class="card-body py-4">
+          <h1 class="display-4 fw-bold text-success">{{ resumo.concluidas }}</h1>
+          <p class="text-muted mb-0 fw-semibold text-uppercase letter-spacing">Concluídas</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards de Acesso Rápido -->
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm border-0 card-hover border-top border-3 border-secondary">
+        <div class="card-body p-4 text-center">
+          <h4 class="fw-bold text-secondary mb-3">Minhas Solicitações</h4>
+          <p class="text-muted">Consulte a listagem de chamados abertos, filtre por status e gerencie suas demandas.</p>
+          <button class="btn btn-outline-secondary px-4 mt-2 fw-bold" (click)="irParaSolicitacoes()">Acessar Listagem</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card h-100 shadow-sm border-0 card-hover border-top border-3 border-primary">
+        <div class="card-body p-4 text-center">
+          <h4 class="fw-bold text-brand mb-3">Nova Solicitação</h4>
+          <p class="text-muted">Abra um novo chamado técnico ou suporte preenchendo o formulário simplificado.</p>
+          <button class="btn btn-brand px-4 mt-2 fw-bold" (click)="irParaNovaSolicitacao()">Criar Chamado</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

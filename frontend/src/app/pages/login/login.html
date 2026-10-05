@@ -1,0 +1,34 @@
+<div class="login-container d-flex justify-content-center align-items-center">
+  <div class="card shadow-lg p-5 login-card">
+
+    <div class="text-center mb-4">
+      <h2 class="brand-title fw-bold">BIT Soluções</h2>
+      <p class="text-muted">Portal de Solicitações Internas</p>
+    </div>
+
+    <!-- Caixa de erro visual -->
+    <div class="alert alert-danger" *ngIf="mensagemErro">
+      {{ mensagemErro }}
+    </div>
+
+    <!-- O (ngSubmit) agora intercepta tanto o clique quanto o Enter no teclado -->
+    <form (ngSubmit)="fazerLogin()">
+      <div class="mb-3">
+        <label for="username" class="form-label fw-semibold text-secondary">Usuário</label>
+        <input type="text" class="form-control input-blue" id="username" name="username"
+               [(ngModel)]="credenciais.username" required autocomplete="username">
+      </div>
+
+      <div class="mb-4">
+        <label for="password" class="form-label fw-semibold text-secondary">Senha</label>
+        <input type="password" class="form-control input-blue" id="password" name="password"
+               [(ngModel)]="credenciais.password" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="btn btn-brand w-100 fw-bold py-2">
+        Entrar no Sistema
+      </button>
+    </form>
+
+  </div>
+</div>
