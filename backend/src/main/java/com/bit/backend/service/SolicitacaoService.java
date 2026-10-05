@@ -31,20 +31,19 @@ public class SolicitacaoService {
                 .collect(Collectors.toList());
     }
 
-    public SolicitacaoResponseDTO criarSolicitacao(SolicitacaoRequestDTO dto, Long usuarioId) {
-        Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + usuarioId));
+    public SolicitacaoResponseDTO criarSolicitacao(SolicitacaoRequestDTO dto) {
+        Usuario usuarioLogado = (Usuario) org.springframework.security.core.context.SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal();
 
         Solicitacao solicitacao = new Solicitacao();
         solicitacao.setTitulo(dto.getTitulo());
         solicitacao.setDescricao(dto.getDescricao());
         solicitacao.setCategoria(dto.getCategoria());
-        solicitacao.setSolicitante(usuario);
+        solicitacao.setSolicitante(usuarioLogado);
         solicitacao.setStatus(Status.ABERTO);
         solicitacao.setAtivo(true);
 
         Solicitacao salva = solicitacaoRepository.save(solicitacao);
-
         return mapearParaDTO(salva);
     }
 
@@ -74,7 +73,7 @@ public class SolicitacaoService {
         dto.setCategoria(solicitacao.getCategoria());
         dto.setStatus(solicitacao.getStatus());
         dto.setDataCriacao(solicitacao.getDataCriacao());
-        dto.setSolicitanteUsername(solicitacao.getSolicitante().getUsername()); // Puxa só o nome!
+        dto.setSolicitanteUsername(solicitacao.getSolicitante().getUsername());
         return dto;
     }
 }

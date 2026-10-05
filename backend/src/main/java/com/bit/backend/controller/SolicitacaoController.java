@@ -26,12 +26,9 @@ public class SolicitacaoController {
         return ResponseEntity.ok(solicitacaoService.listarTodas());
     }
 
-    @PostMapping("/usuario/{usuarioId}")
-    public ResponseEntity<SolicitacaoResponseDTO> criar(
-            @PathVariable Long usuarioId,
-            @Valid @RequestBody SolicitacaoRequestDTO dto) { // @Valid liga a proteção!
-
-        SolicitacaoResponseDTO novaSolicitacao = solicitacaoService.criarSolicitacao(dto, usuarioId);
+    @PostMapping
+    public ResponseEntity<SolicitacaoResponseDTO> criar(@Valid @RequestBody SolicitacaoRequestDTO dto) {
+        SolicitacaoResponseDTO novaSolicitacao = solicitacaoService.criarSolicitacao(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaSolicitacao);
     }
 
