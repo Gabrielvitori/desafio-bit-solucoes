@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { SolicitacaoService } from '../../services/solicitacao';
 
 @Component({
   selector: 'app-solicitacao-form',
@@ -25,7 +26,8 @@ export class SolicitacaoForm implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private solicitacaoService: SolicitacaoService
   ) {
     this.form = this.fb.group({
       titulo: ['', Validators.required],
@@ -37,7 +39,6 @@ export class SolicitacaoForm implements OnInit {
   ngOnInit(): void {
     this.verificarPerfil();
 
-    // Verifica se a URL tem um ID (Modo Edição/Detalhes)
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
       this.solicitacaoId = Number(idParam);
@@ -55,7 +56,8 @@ export class SolicitacaoForm implements OnInit {
   }
 
   carregarSolicitacao() {
-    this.http.get<any[]>(this.apiUrl, { withCredentials: true }).subscribe({
+    //  anti-cache por segurança na requisição HTTP direta
+    this.http.get<any[]>(`${this.apiUrl}?cb=${Date.now()}`, { withCredentials: true }).subscribe({
       next: (lista) => {
         const encontrada = lista.find(s => s.id === this.solicitacaoId);
         if (encontrada) {
@@ -66,7 +68,6 @@ export class SolicitacaoForm implements OnInit {
             descricao: encontrada.descricao
           });
 
-          // Bloqueia edição se não estiver ABERTO ou se for ADMIN (Admin não edita conteúdo, só status na listagem)
           if (encontrada.status !== 'ABERTO' || this.isAdmin) {
             this.modoVisualizacao = true;
             this.form.disable();
@@ -78,25 +79,23 @@ export class SolicitacaoForm implements OnInit {
   }
 
   salvar() {
-    if (this.form.invalid) {
-      alert('Preencha todos os campos obrigatórios.');
-      return;
-    }
+      if (this.form.invalid) {
+        alert('Preencha todos os campos obrigatórios.');
+        return;
+      }
 
-    const payload = this.form.value;
+      const payload = this.form.value;
 
-    if (this.solicitacaoId) {
-      //  Aviso
-      alert('A edição (PUT) precisa ser mapeada no backend (SolicitacaoController).');
-    } else {
-      // Criar nova
-      this.http.post(this.apiUrl, payload, { withCredentials: true }).subscribe({
-        next: () => {
-          alert('Solicitação criada com sucesso!');
-          this.router.navigate(['/solicitacoes']);
-        },
-        error: (err) => alert('Erro ao criar solicitação.')
-      });
+      if (this.solicitacaoId) {
+        this.solicitacaoService.editar(this.solicitacaoId, payload).subscribe({
+          next: () => this.router.navigate(['/solicitacoes']),
+          error: (err) => console.error(err)
+        });
+      } else {
+        this.http.post(this.apiUrl, payload, { withCredentials: true }).subscribe({
+          next: () => this.router.navigate(['/solicitacoes']),
+          error: (err) => console.error(err)
+        });
+      }
     }
-  }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,6 +11,12 @@ export class DashboardService {
   constructor(private http: HttpClient) { }
 
   obterResumo(): Observable<any> {
-    return this.http.get(this.apiUrl, { withCredentials: true });
+    const params = new HttpParams().set('cb', new Date().getTime().toString());
+
+    return this.http.get<any>(this.apiUrl, {
+      params: params,
+      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate', 'Pragma': 'no-cache' },
+      withCredentials: true
+    });
   }
 }

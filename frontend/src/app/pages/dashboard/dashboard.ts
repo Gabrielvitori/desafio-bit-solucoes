@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <-- 1. Importado o ChangeDetectorRef
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { DashboardService } from '../../services/dashboard'; // Importando o serviço
+import { DashboardService } from '../../services/dashboard';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,12 +13,12 @@ import { DashboardService } from '../../services/dashboard'; // Importando o ser
 export class Dashboard implements OnInit {
   usuarioNome = 'Usuário';
 
-  // Variável para amarrar no HTML
   resumo = { total: 0, abertas: 0, emAtendimento: 0, concluidas: 0 };
 
   constructor(
     private router: Router,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -35,6 +35,7 @@ export class Dashboard implements OnInit {
     this.dashboardService.obterResumo().subscribe({
       next: (dados: any) => {
         this.resumo = dados;
+        this.cdr.detectChanges();
       },
       error: (erro: any) => {
         console.error('Erro ao carregar o dashboard', erro);
